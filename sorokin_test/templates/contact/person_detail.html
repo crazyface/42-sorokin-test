@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<ul class='left'>
+		<li>
+			{{ person.field_labels.first_name }}: {{ person.first_name }} 
+		</li>
+		<li>
+			{{ person.field_labels.last_name }}: {{ person.last_name }} 
+		</li>
+		<li>
+			{{ person.field_labels.birthday }}: {{ person.birthday }} 
+		</li>
+		<li>
+			{{ person.field_labels.bio }}: {{ person.bio }} 
+		</li>
+	</ul>
+	<ul class='left'>
+		<li>Contacts</li>
+		<li>
+			{{ person.field_labels.email }}: {{ person.email }}
+		</li>
+		<li>
+			{{ person.field_labels.jabber }}: {{ person.jabber }}
+		</li>
+		<li>
+			{{ person.field_labels.skype }}: {{ person.skype }}
+		</li>
+		<li>
+			{{ person.field_labels.other_contacts }}:
+			<ul>
+				<li>
+					{{ person.other_contacts }}
+				</li>
+			</ul>
+		</li>
+	</ul>
+{% endblock %}

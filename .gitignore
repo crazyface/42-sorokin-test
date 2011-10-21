@@ -1,2 +1,6 @@
 *.pyc
 *.sqlite3
+.project
+.pydevproject
+local_settings.py
+.sass-cache

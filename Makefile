@@ -1,2 +1,2 @@
 test:
-	@echo Hel!
+	python sorokin_test/manage.py test
