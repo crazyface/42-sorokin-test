@@ -37,7 +37,6 @@ class TestModelBase:
 
 
 class TestModelPerson(TestModelBase, TestCase):
-    fixtures = ['person.json']
     model = Person
     fixture_count = 1
     field_list = ['id', 'first_name', 'last_name', 'birthday', 'bio', 'email',
@@ -45,7 +44,6 @@ class TestModelPerson(TestModelBase, TestCase):
 
 
 class TestPersonView(TestCase):
-    fixtures = ['person.json']
     url = reverse('person_detail')
 
     def setUp(self):
