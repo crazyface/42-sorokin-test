@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-	<ul>
+	<ul class='left'>
 		<li>
 			{{ person.field_labels.first_name }}: {{ person.first_name }} 
 		</li>
@@ -15,8 +15,8 @@
 			{{ person.field_labels.bio }}: {{ person.bio }} 
 		</li>
 	</ul>
-	Contacts
-	<ul>
+	<ul class='left'>
+		<li>Contacts</li>
 		<li>
 			{{ person.field_labels.email }}: {{ person.email }}
 		</li>

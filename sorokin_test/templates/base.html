@@ -2,11 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru" lang="ru">
     <head>
         <title>{% block title %}{% endblock %}</title>
+        <link href="{{ MEDIA_URL }}css/index.css" type="text/css" media="all" rel="stylesheet">
         {% block extrahead %}{% endblock %}
     </head>
     <body>
-    	<h2>42 Coffee Cups Test Assignment</h2>
-    	{% block content %}
-    	{% endblock %}
+    	<div id='content'>
+	    	<h2>42 Coffee Cups Test Assignment</h2>
+	    	{% block content %}
+	    	{% endblock %}
+    	</div>
     </body>
 </html>
