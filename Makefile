@@ -1,2 +1,2 @@
 test:
-	python sorokin_test manage.py test
+	python sorokin_test/manage.py test
