@@ -1,8 +1,5 @@
 """
-This file demonstrates writing tests using the unittest module. These will pass
-when you run "manage.py test".
-
-Replace this with more appropriate tests for your application.
+    test contact
 """
 from models import Person
 from django.test import TestCase
@@ -10,15 +7,32 @@ from django.core.urlresolvers import reverse
 
 
 class TestModelBase:
+    """
+    Base class for testing Model
+    """
+    #define this attrs when extend
+    model = None
+    fixture_count = None
+    field_list = None
 
     def setUp(self):
+        """
+        Get object count
+        Sort field name list
+        """
         self.objects_count = self.model.objects.count()
         self.field_list.sort()
 
     def test_fixture(self):
+        """
+        Equal define object count with curren object count in db
+        """
         self.assertEqual(self.objects_count, self.fixture_count)
 
     def test_fields(self):
+        """
+        Check model fields
+        """
         self.assertEqual(self.field_list, self.model.fields_names())
 
 
