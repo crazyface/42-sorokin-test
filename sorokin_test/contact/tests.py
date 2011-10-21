@@ -6,6 +6,7 @@ Replace this with more appropriate tests for your application.
 """
 from models import Person
 from django.test import TestCase
+from django.core.urlresolvers import reverse
 
 
 class TestModelBase:
@@ -22,8 +23,30 @@ class TestModelBase:
 
 
 class TestModelPerson(TestModelBase, TestCase):
-    fixtures = ['person.json']
     model = Person
     fixture_count = 1
     field_list = ['id', 'first_name', 'last_name', 'birthday', 'bio', 'email',
                   'jabber', 'skype', 'other_contacts']
+
+
+class TestPersonView(TestCase):
+    url = reverse('person_detail')
+
+
+    def setUp(self):
+        self.person = Person.objects.get(pk=1)
+        self.response = self.client.get(self.url)
+        self.assertEqual(self.response.status_code, 200)
+
+    def test_context(self):
+        context_person = self.response.context['person']
+        self.assertEqual(str(context_person), str(self.person))
+
+    def test_layout(self):
+        self.assertContains(self.response, self.person.bio)
+        self.assertContains(self.response, self.person.first_name)
+        self.assertContains(self.response, self.person.jabber)
+        self.assertContains(self.response, self.person.skype)
+
+
+
