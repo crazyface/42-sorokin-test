@@ -161,12 +161,12 @@ class TestSettingsContextProc(TestCase):
 class TestPersonForm(TestCase):
     username = 'admin'
     password = 'admin'
-    person = Person.objects.all()[0]
     login_url = reverse('login')
     url = reverse('person_edit')
     main_url = reverse('person_detail')
 
     def setUp(self):
+        self.person = Person.objects.all()[0]
         response = self.client.post(self.login_url,
                                     {'username': self.username,
                                      'password': self.password})
