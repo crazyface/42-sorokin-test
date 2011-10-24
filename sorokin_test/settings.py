@@ -30,7 +30,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.media",
     "django.core.context_processors.static",
     "django.contrib.messages.context_processors.messages",
-    'core.template_processor.settings_processor')
+    'sorokin_test.core.template_processor.settings_processor')
 
 
 LOGIN_REDIRECT_URL = '/'
