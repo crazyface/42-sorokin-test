@@ -7,6 +7,6 @@ class PersonDetailView(DetailView):
     model = Person
 
     def get_object(self, **kwargs):
-        self.kwargs['pk'] = 1
-        obj = super(PersonDetailView, self).get_object()
-        return obj
+#        self.kwargs['pk'] = 1
+#        obj = super(PersonDetailView, self).get_object()
+        return self.model.objects.all()[0]
