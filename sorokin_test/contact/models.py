@@ -1,11 +1,11 @@
 from django.db import models
 from django.utils import simplejson
 
+
 class ModelMixIn(object):
     FIELD_NAMES = []
     FIELD_LABELS = {}
-    
-    
+
     @classmethod
     def field_labels(cls):
         """
@@ -48,7 +48,6 @@ class Person(ModelMixIn, models.Model):
         return '%s %s' % (self.first_name, self.last_name)
 
 
-
 class RequestStore(ModelMixIn, models.Model):
     created = models.DateTimeField(auto_now_add=True)
     url = models.TextField()
@@ -58,16 +57,16 @@ class RequestStore(ModelMixIn, models.Model):
     req_session = models.TextField(blank=True, null=True)
     req_meta = models.TextField()
     res_status_code = models.PositiveIntegerField()
-    
+
     class Meta:
         ordering = ['-created']
-    
+
     def save(self, *args, **kwargs):
         self.req_get = dict(self.req_get)
         self.req_post = dict(self.req_post)
         self.req_session = dict(self.req_session.items())
         return super(RequestStore, self).save(*args, **kwargs)
-    
+
     def __unicode__(self):
         return "(%s) '%s' at %s" % (self.res_status_code,
                                     self.url,
