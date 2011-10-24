@@ -6,6 +6,7 @@ from django.test import TestCase
 from django.core.urlresolvers import reverse
 from datetime import date
 from django.contrib.auth.forms import AuthenticationForm
+from django.conf import settings
 
 
 class TestModelBase:
@@ -136,3 +137,19 @@ class TestRequestView(TestCase):
         self.response = self.client.get(self.url2)
         self.assertContains(self.response, self.fake_url)
         self.assertContains(self.response, "404")
+
+
+class TestSettingsContextProc(TestCase):
+    settings = settings
+    url = reverse('login')
+
+    def test_context(self):
+        self.response = self.client.get(self.url)
+        self.assertEqual(self.response.status_code, 200)
+        self.assertEqual(self.response.context['settings'],
+                             self.settings)
+
+        self.assertEqual(self.response.context['settings'].MEDIA_URL,
+                             self.settings.MEDIA_URL)
+        self.assertEqual(self.response.context['settings'].SECRET_KEY,
+                             self.settings.SECRET_KEY)
