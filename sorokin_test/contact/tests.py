@@ -5,7 +5,7 @@ from models import Person
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 from datetime import date
-
+from django.contrib.auth.forms import AuthenticationForm
 
 class TestModelBase:
     """
@@ -77,3 +77,30 @@ class TestPersonView(TestCase):
         self.test_layout()
         
 
+class TestLogin(TestCase):
+    username = 'admin'
+    password = 'admin'
+    url = reverse('login')
+    login_form = AuthenticationForm()
+    
+    
+    def test_login(self):
+        
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        #check form is present
+        for field in self.login_form:
+            self.assertContains(response, field)
+        #test with wrong password
+        response = self.client.post(self.url,
+                                    {'username': self.username,
+                                     'password': '123'})
+        self.assertEqual(response.status_code, 200)
+        #test with valid password
+        self.assertContains(response,
+                            "Your username and password didn't match")
+        
+        response = self.client.post(self.url,
+                                    {'username': self.username,
+                                     'password': self.password})
+        self.assertEqual(response.status_code, 302)
