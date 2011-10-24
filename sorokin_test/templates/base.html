@@ -6,8 +6,20 @@
     </head>
     <body>
     	<div id='content'>
+    		<div class='header'>
+				<h2>42 Coffee Cups Test Assignment</h2>
+				{% if user.is_authenticated %}
+					<span>Hello, {{ user.username }}. <a href={% url logout %}?next={% url person_detail %}>Logout</a></span>
+				{% else %}
+			    	<span><a href={% url login %}>Login</a></span>
+			    {% endif %}
+			    <div class='clear'></div>
+			</div>
 	    	{% block content %}
 	    	{% endblock %}
+	    	<div class='footer'>
+	    		<a href='{% url requests %}'>requests</a> <a href='{% url person_detail %}'>home</a>	
+	    	</div>
     	</div>
     </body>
 </html>

@@ -1,11 +1,12 @@
 """
     test contact
 """
-from models import Person
+from models import Person, RequestStore
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 from datetime import date
 from django.contrib.auth.forms import AuthenticationForm
+
 
 class TestModelBase:
     """
@@ -43,6 +44,12 @@ class TestModelPerson(TestModelBase, TestCase):
     field_list = ['id', 'first_name', 'last_name', 'birthday', 'bio', 'email',
                   'jabber', 'skype', 'other_contacts']
 
+class TestModelRequestStore(TestModelBase, TestCase):
+    model = RequestStore
+    fixture_count = 0
+    field_list = ['id', 'created', 'url', 'req_get', 'req_post', 'req_cookies',
+                  'req_session', 'req_meta', 'res_status_code']
+
 
 class TestPersonView(TestCase):
     url = reverse('person_detail')
@@ -75,17 +82,16 @@ class TestPersonView(TestCase):
         self.setUp()
         self.test_context()
         self.test_layout()
-        
+
 
 class TestLogin(TestCase):
     username = 'admin'
     password = 'admin'
     url = reverse('login')
     login_form = AuthenticationForm()
-    
-    
+
     def test_login(self):
-        
+
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         #check form is present
@@ -99,8 +105,33 @@ class TestLogin(TestCase):
         #test with valid password
         self.assertContains(response,
                             "Your username and password didn't match")
-        
+
         response = self.client.post(self.url,
                                     {'username': self.username,
                                      'password': self.password})
         self.assertEqual(response.status_code, 302)
+
+
+class TestRequestView(TestCase):
+    url1 = reverse('login')
+    fake_url = '/asdas'
+    url2 = reverse('requests')
+    
+    def test_context(self):
+        # visit valid url
+        self.response = self.client.get(self.url1)
+        self.assertEqual(self.response.status_code, 200)
+        
+        #check that request is saved
+        self.response = self.client.get(self.url2)
+        self.assertContains(self.response, "/login/")
+        self.assertContains(self.response, "200")
+        
+        #visit invalid url
+        self.response = self.client.get(self.fake_url)
+        self.assertEqual(self.response.status_code, 404)
+        
+        #check that request is saved
+        self.response = self.client.get(self.url2)
+        self.assertContains(self.response, self.fake_url)
+        self.assertContains(self.response, "404")
