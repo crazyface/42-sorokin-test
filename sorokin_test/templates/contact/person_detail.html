@@ -1,6 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}
+	<div class='header'>
+		<h2>42 Coffee Cups Test Assignment</h2>
+		{% if user.is_authenticated %}
+			<span>Hello, {{ user.username }}. <a href={% url logout %}?next={% url person_detail %}>Logout</a></span>
+		{% else %}
+	    	<span><a href={% url login %}>Login</a></span>
+	    {% endif %}
+	    <div class='clear'></div>
+	</div>
 	<ul class='left'>
 		<li>
 			{{ person.field_labels.first_name }}: {{ person.first_name }} 

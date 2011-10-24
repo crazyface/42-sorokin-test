@@ -1,5 +1,6 @@
 from django.views.generic import DetailView
 from models import Person
+from django.views.generic import TemplateView
 
 
 class PersonDetailView(DetailView):
@@ -7,6 +8,6 @@ class PersonDetailView(DetailView):
     model = Person
 
     def get_object(self, **kwargs):
-#        self.kwargs['pk'] = 1
-#        obj = super(PersonDetailView, self).get_object()
         return self.model.objects.all()[0]
+
+    
