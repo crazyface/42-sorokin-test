@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import simplejson
+from django.core.urlresolvers import reverse
 
 
 class ModelMixIn(object):
@@ -46,6 +47,9 @@ class Person(ModelMixIn, models.Model):
 
     def __unicode__(self):
         return '%s %s' % (self.first_name, self.last_name)
+
+    def get_absolute_url(self):
+        return reverse('person_detail')
 
 
 class RequestStore(ModelMixIn, models.Model):

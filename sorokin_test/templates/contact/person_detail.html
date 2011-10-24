@@ -12,11 +12,13 @@
 			{{ person.field_labels.birthday }}: {{ person.birthday }} 
 		</li>
 		<li>
-			{{ person.field_labels.bio }}: {{ person.bio }} 
+			{{ person.field_labels.bio }}:
+			<ul>
+				<li>{{ person.bio }}</li>
+			</ul> 
 		</li>
 	</ul>
 	<ul class='left'>
-		<li>Contacts</li>
 		<li>
 			{{ person.field_labels.email }}: {{ person.email }}
 		</li>

@@ -1,5 +1,6 @@
 # Django settings for sorokin_test project.
 import os
+from django.core.urlresolvers import reverse
 
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -35,6 +36,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = '/login/'
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.

@@ -9,6 +9,16 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.conf import settings
 
 
+OTHER_USER = {'first_name': 'Vasia',
+              'last_name': 'Pupin',
+              'birthday': date.today(),
+              'bio': 'molodec',
+              'email': 'vasia@mail.com',
+              'jabber': 'vasia@jabber.org',
+              'skype': 'vasia',
+              'other_contacts': 'tel: 123456'}
+
+
 class TestModelBase:
     """
     Base class for testing Model
@@ -73,14 +83,7 @@ class TestPersonView(TestCase):
 
     def test_both(self):
         Person.objects.all()[0].delete()
-        Person.objects.create(first_name='Vasia',
-                              last_name='Pupin',
-                              birthday=date.today(),
-                              bio='molodec',
-                              email='vasia@mail.com',
-                              jabber='vasia@jabber.org',
-                              skype='vasia',
-                              other_contacts='tel: 123456')
+        Person.objects.create(**OTHER_USER)
         self.setUp()
         self.test_context()
         self.test_layout()
@@ -153,3 +156,41 @@ class TestSettingsContextProc(TestCase):
                              self.settings.MEDIA_URL)
         self.assertEqual(self.response.context['settings'].SECRET_KEY,
                              self.settings.SECRET_KEY)
+
+
+class TestPersonForm(TestCase):
+    username = 'admin'
+    password = 'admin'
+    person = Person.objects.all()[0]
+    login_url = reverse('login')
+    url = reverse('person_edit')
+    main_url = reverse('person_detail')
+
+    def setUp(self):
+        response = self.client.post(self.login_url,
+                                    {'username': self.username,
+                                     'password': self.password})
+        self.assertEqual(response.status_code, 302)
+
+    def test_layout(self):
+        self.response = self.client.get(self.url)
+        self.assertEqual(self.response.status_code, 200)
+        self.assertContains(self.response, self.person.last_name)
+        self.assertContains(self.response, self.person.bio)
+
+        self.person.last_name = 'Joe'
+        self.person.save()
+
+        self.response = self.client.get(self.url)
+        self.assertEqual(self.response.status_code, 200)
+        self.assertContains(self.response, self.person.last_name)
+        self.assertContains(self.response, self.person.bio)
+
+        self.response = self.client.post(self.url, OTHER_USER)
+        self.assertEqual(self.response.status_code, 302)
+
+        self.response = self.client.get(self.main_url)
+        self.assertEqual(self.response.status_code, 200)
+
+        self.assertContains(self.response, OTHER_USER['last_name'])
+        self.assertContains(self.response, OTHER_USER['bio'])
