@@ -12,5 +12,23 @@
       "jabber": "bsorokind@fmail.com", 
       "email": "bsorokind@fmail.com"
     }
+  },
+  {
+    "pk": 1, 
+    "model": "auth.user", 
+    "fields": {
+      "username": "admin", 
+      "first_name": "", 
+      "last_name": "", 
+      "is_active": true, 
+      "is_superuser": true, 
+      "is_staff": true, 
+      "last_login": "2011-10-24 13:37:33", 
+      "groups": [], 
+      "user_permissions": [], 
+      "password": "sha1$a13b5$fe04d136b57c45415dd7c56fa28601262cb1be11", 
+      "email": "admin@mail.com", 
+      "date_joined": "2011-10-24 13:37:33"
+    }
   }
 ]

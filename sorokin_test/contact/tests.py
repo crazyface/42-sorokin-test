@@ -4,6 +4,7 @@
 from models import Person
 from django.test import TestCase
 from django.core.urlresolvers import reverse
+from datetime import date
 
 
 class TestModelBase:
@@ -47,7 +48,7 @@ class TestPersonView(TestCase):
     url = reverse('person_detail')
 
     def setUp(self):
-        self.person = Person.objects.get(pk=1)
+        self.person = Person.objects.all()[0]
         self.response = self.client.get(self.url)
         self.assertEqual(self.response.status_code, 200)
 
@@ -60,3 +61,19 @@ class TestPersonView(TestCase):
         self.assertContains(self.response, self.person.first_name)
         self.assertContains(self.response, self.person.jabber)
         self.assertContains(self.response, self.person.skype)
+
+    def test_both(self):
+        Person.objects.all()[0].delete()
+        Person.objects.create(first_name='Vasia',
+                              last_name='Pupin',
+                              birthday=date.today(),
+                              bio='molodec',
+                              email='vasia@mail.com',
+                              jabber='vasia@jabber.org',
+                              skype='vasia',
+                              other_contacts='tel: 123456')
+        self.setUp()
+        self.test_context()
+        self.test_layout()
+        
+
