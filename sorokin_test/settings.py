@@ -104,6 +104,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'sorokin_test.core.middleware.RequestMiddleWare'
 )
 
 ROOT_URLCONF = 'sorokin_test.urls'
