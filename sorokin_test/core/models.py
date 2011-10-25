@@ -44,7 +44,7 @@ class RequestStore(ModelMixIn, models.Model):
     req_cookies = models.TextField(blank=True, null=True)
     req_session = models.TextField(blank=True, null=True)
     req_meta = models.TextField()
-    res_status_code = models.PositiveIntegerField()
+    res_status_code = models.PositiveIntegerField(blank=True, null=True)
 
     class Meta:
         ordering = ['-created']
