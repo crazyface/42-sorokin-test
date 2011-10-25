@@ -1,6 +1,6 @@
 from django.views.generic import DetailView
-from models import Person, RequestStore
-from django.views.generic import TemplateView, ListView, UpdateView
+from models import Person
+from django.views.generic import UpdateView
 
 
 class PersonDetailView(DetailView):
@@ -18,5 +18,3 @@ class PersonEditView(UpdateView):
         return self.model.objects.all()[0]
 
 
-class RequestsListView(ListView):
-    queryset = RequestStore.objects.all()[:10]

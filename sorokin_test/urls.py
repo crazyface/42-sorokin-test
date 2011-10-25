@@ -10,6 +10,7 @@ urlpatterns = patterns('',
 # Examples:
 #     url(r'^$', 'sorokin_test.views.home', name='home'),
      url(r'^', include('sorokin_test.contact.urls')),
+     url(r'^requesta/', include('sorokin_test.core.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
      url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

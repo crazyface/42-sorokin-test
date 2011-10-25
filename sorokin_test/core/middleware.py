@@ -1,4 +1,4 @@
-from sorokin_test.contact.models import RequestStore
+from models import RequestStore
 import re
 
 
