@@ -5,7 +5,6 @@ class RequestMiddleWare(object):
     object = None
 
     def process_request(self, request):
-        print request
         path = url=request.path
         if not re.match("^(/media|/admin|.*\.ico).*$", path):
             self.object = RequestStore.objects.create(
