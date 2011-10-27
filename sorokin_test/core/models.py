@@ -3,7 +3,6 @@ from django.db import models
 from django.utils import simplejson
 
 
-
 class ModelMixIn(object):
     FIELD_NAMES = []
     FIELD_LABELS = {}
@@ -34,8 +33,8 @@ class ModelMixIn(object):
         cls.FIELD_NAMES = [field.name for field in cls._meta.fields]
         cls.FIELD_NAMES.sort()
         return cls.FIELD_NAMES
-    
-    
+
+
 class RequestStore(ModelMixIn, models.Model):
     created = models.DateTimeField(auto_now_add=True)
     url = models.TextField()
