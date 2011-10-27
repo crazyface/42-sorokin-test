@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+
+
 {% block content %}
 	<table class='requests'>
 		<tr>
@@ -13,7 +15,7 @@
 		{% for req in object_list %}
 			<tr>
 				<td>{{ req.req_status_code }}</td>
-				<td>{{ req.url }}</td>
+				<td>{{ req.url }} </td>
 				<td>{{ req.created }}</td>
 				<td>{{ req.req_get }}</td>
 				<td>{{ req.req_post }}</td>

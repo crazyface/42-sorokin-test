@@ -107,7 +107,7 @@ SECRET_KEY = 'zxm8e9kqi=5l+@vy@p9!3c%1z+als&sb#_v^1oob!_%fj(mbw^'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -137,7 +137,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'sorokin_test.core',
-    'sorokin_test.contact'
+    'sorokin_test.contact',
     # Uncomment the next line to enable the admin:
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
