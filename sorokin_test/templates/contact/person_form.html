@@ -4,14 +4,23 @@
 	<form method='post' id='perso_edit_form'>{% csrf_token %}
 		<table class='left'>
 				{% for field in form %}
+					
 					<tr>
-						<td>{{ field.label }}:</td><td>{{ field }}</td>
+						<th>{{ field.label }}:</th>
+						<td>
+							{% if field.errors %}
+								{{ field.errors }}
+							{% endif %}
+							{{ field }}
+						</td>
 					<tr>
 					{% if forloop.counter|divisibleby:"4" %}
-						</table class='left'><table>
+						</table><table class='left'>
 					{% endif %}
 				{% endfor %}
 		</table>
-		<input type='submit' value='save'>
+		<div class='clear'>
+			<input type='submit' value='save'>
+		</div>
 	</form>
 {% endblock %}
