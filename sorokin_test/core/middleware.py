@@ -16,6 +16,6 @@ class RequestMiddleWare(object):
 
     def process_response(self, request, response):
         if self.object:
-            self.object.res_status_code = response.status_code
+            self.object.req_status_code = response.status_code
             self.object.save()
         return response

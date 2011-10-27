@@ -1,8 +1,25 @@
 {% extends 'base.html' %}
 {% block content %}
-	<ul>
+	<table border=1>
+		<tr>
+			<td>Status</td>
+			<td>Url</td>
+			<td>Date</td>
+			<td>Get</td>
+			<td>Post</td>
+			<td>Session</td>
+			<td>Cookies</td>
+		</tr>
 		{% for req in object_list %}
-			<li>{{ req }}</li>
+			<tr>
+				<td>{{ req.req_status_code }}</td>
+				<td>{{ req.url }}</td>
+				<td>{{ req.created }}</td>
+				<td>{{ req.req_get }}</td>
+				<td>{{ req.req_post }}</td>
+				<td>{{ req.req_session }}</td>
+				<td>{{ req.req_cookies }}</td>
+			</tr>
 		{% endfor %}
-	</ul>
+	</table>
 {% endblock %}

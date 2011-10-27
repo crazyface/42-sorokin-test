@@ -7,22 +7,23 @@ html, body {
     line-height: 26px;
     font-weight: normal; }
 
+#perso_edit_form table {
+  width: 355px; }
+  #perso_edit_form table textarea {
+    margin: 0px;
+    background-color: #F5F0F5;
+    border: 1px solid #999;
+    width: 242px;
+    height: 112px; }
+  #perso_edit_form table input {
+    background-color: #F5F0F5;
+    border: 1px solid #999;
+    width: 200px;
+    height: 14px; }
+
 #content {
   width: 800px;
   margin: 0 auto; }
-  #content table {
-    width: 355px; }
-    #content table textarea {
-      margin: 0px;
-      background-color: #F5F0F5;
-      border: 1px solid #999;
-      width: 242px;
-      height: 112px; }
-    #content table input {
-      background-color: #F5F0F5;
-      border: 1px solid #999;
-      width: 200px;
-      height: 14px; }
   #content ul {
     font-size: 14px;
     line-height: 18px;

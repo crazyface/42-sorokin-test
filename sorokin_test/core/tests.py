@@ -38,7 +38,7 @@ class TestModelRequestStore(TestModelBase, TestCase):
     model = RequestStore
     fixture_count = 0
     field_list = ['id', 'created', 'url', 'req_get', 'req_post', 'req_cookies',
-                  'req_session', 'req_meta', 'res_status_code']
+                  'req_session', 'req_meta', 'req_status_code']
 
 
 class TestRequestView(TestCase):
