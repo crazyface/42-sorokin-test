@@ -1,13 +1,11 @@
 from models import RequestStore
-import re
 
 
 class RequestMiddleWare(object):
-    object = None
+    curr_req = None
 
     def process_request(self, request):
-        path = request.path
-        self.object = RequestStore.objects.create(url=request.path,
+        self.curr_req = RequestStore.objects.create(url=request.path,
                                                   req_get=request.GET,
                                                   req_post=request.POST,
                                                   req_cookies=request.COOKIES,
@@ -15,7 +13,7 @@ class RequestMiddleWare(object):
                                                   req_meta=request.META)
 
     def process_response(self, request, response):
-        if self.object:
-            self.object.req_status_code = response.status_code
-            self.object.save()
+        if self.curr_req:
+            self.curr_req.req_status_code = response.status_code
+            self.curr_req.save()
         return response

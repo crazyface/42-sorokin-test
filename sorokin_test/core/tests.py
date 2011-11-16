@@ -2,6 +2,8 @@ from models import RequestStore
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 from django.conf import settings
+from sorokin_test.core.templatetags.admin_urls import get_admin_url
+from sorokin_test.contact.models import Person
 
 
 class TestModelBase:
@@ -80,3 +82,11 @@ class TestSettingsContextProc(TestCase):
                              self.settings.MEDIA_URL)
         self.assertEqual(self.response.context['settings'].SECRET_KEY,
                              self.settings.SECRET_KEY)
+
+
+class TestCustomTag(TestCase):
+    
+    def test_tag(self):
+        obj = Person.objects.all()[0]
+        self.assertEqual(get_admin_url(obj), '/admin/contact/person/1/')
+        
