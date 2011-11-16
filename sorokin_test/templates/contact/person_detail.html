@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
-
+{% load admin_urls %}
 
 {% block content %}
+	<div>
+		<h3>Пример работы тега <a href="{% get_admin_url person %}">{{ person }}</a></h3>
+	</div>
 	<ul class='left'>
 		<li>
 			{{ person.field_labels.first_name }}: {{ person.first_name }} 
