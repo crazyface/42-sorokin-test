@@ -46,6 +46,16 @@ class TestRequestView(TestCase):
     fake_url = '/asdas'
     url2 = reverse('requests')
 
+    def test_middleware(self):
+        response = self.client.get(self.url1)
+        obj = RequestStore.objects.filter(url=self.url1,
+                                          req_status_code=200) 
+        self.assertEqual(obj.count(), 1)
+        response = self.client.get(self.fake_url)
+        obj = RequestStore.objects.filter(url=self.fake_url,
+                                          req_status_code=404) 
+        self.assertEqual(obj.count(), 1)
+    
     def test_context(self):
         # visit valid url
         self.response = self.client.get(self.url1)
