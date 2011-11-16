@@ -10,6 +10,7 @@ urlpatterns = patterns('',
 # Examples:
 #     url(r'^$', 'sorokin_test.views.home', name='home'),
      url(r'^', include('sorokin_test.contact.urls')),
+     url(r'^requesta/', include('sorokin_test.core.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
      url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
@@ -18,9 +19,9 @@ urlpatterns = patterns('',
      url(r'^admin/', include(admin.site.urls)),
 )
 
-if settings.DEBUG:
+if True:
     urlpatterns += patterns('',
-        url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
+        url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {
             'document_root': settings.MEDIA_ROOT,
         }),
    )

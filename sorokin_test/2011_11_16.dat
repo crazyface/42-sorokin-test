@@ -1,0 +1,10 @@
+<class 'django.contrib.contenttypes.models.ContentType'> has 10 objects
+<class 'django.contrib.auth.models.Permission'> has 30 objects
+<class 'django.contrib.auth.models.Group'> has 0 objects
+<class 'django.contrib.auth.models.User'> has 1 objects
+<class 'django.contrib.auth.models.Message'> has 0 objects
+<class 'django.contrib.sites.models.Site'> has 1 objects
+<class 'django.contrib.sessions.models.Session'> has 2 objects
+<class 'django.contrib.admin.models.LogEntry'> has 0 objects
+<class 'sorokin_test.core.models.RequestStore'> has 1506 objects
+<class 'sorokin_test.contact.models.Person'> has 1 objects

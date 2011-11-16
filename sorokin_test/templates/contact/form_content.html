@@ -1,0 +1,18 @@
+{% csrf_token %}
+<table class='left'>
+		{% for field in form reversed %}
+			
+			<tr>
+				<th>{{ field.label }}:</th>
+				<td>
+					{% if field.errors %}
+						{{ field.errors }}
+					{% endif %}
+					{{ field }}
+				</td>
+			<tr>
+			{% if forloop.counter|divisibleby:"4" %}
+				</table><table class='left'>
+			{% endif %}
+		{% endfor %}
+</table>
