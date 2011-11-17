@@ -1,12 +1,10 @@
 from models import RequestStore
-import re
 
 
 class RequestMiddleWare(object):
-    object = None
 
     def process_request(self, request):
-        path = request.path
+        self.object = None
         self.object = RequestStore.objects.create(url=request.path,
                                                   req_get=request.GET,
                                                   req_post=request.POST,

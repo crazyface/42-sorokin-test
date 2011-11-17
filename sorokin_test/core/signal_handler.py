@@ -1,9 +1,9 @@
-from django.db.models.signals import pre_delete, post_save
+from django.db.models.signals import post_delete, post_save
 from models import DbEntry
 from django.db.utils import DatabaseError
 
 def post_save_handler(sender, instance, created, **kwargs):
-    if not isinstance(instance, DbEntry):
+    if not isinstance(instance, DbEntry) and hasattr(instance, 'id'):
         action = 'edit'
         if created:
             action = 'create'
@@ -16,7 +16,7 @@ def post_save_handler(sender, instance, created, **kwargs):
 #    print sen./der, instance, created, kwargs
 
 def post_delete_handler(sender, instance, **kwargs):
-    if not isinstance(instance, DbEntry):
+    if not isinstance(instance, DbEntry) and hasattr(instance, 'id'):
         try:
             DbEntry.objects.create(action='delete',
                                    content_object=instance,
@@ -25,4 +25,4 @@ def post_delete_handler(sender, instance, **kwargs):
             pass
 
 post_save.connect(post_save_handler)
-pre_delete.connect(post_delete_handler)
+post_delete.connect(post_delete_handler)
