@@ -46,6 +46,7 @@ class RequestStore(ModelMixIn, models.Model):
     req_session = models.TextField(blank=True, null=True)
     req_meta = models.TextField()
     req_status_code = models.PositiveIntegerField(blank=True, null=True)
+    priority = models.IntegerField(default=1)
 
     class Meta:
         ordering = ['-created']
