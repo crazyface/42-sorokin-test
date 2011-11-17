@@ -138,6 +138,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'sorokin_test.contact',
     'sorokin_test.core',
+    'south'
     # Uncomment the next line to enable the admin:
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
