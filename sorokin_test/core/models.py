@@ -1,6 +1,8 @@
 from django.test import TestCase
 from django.db import models
 from django.utils import simplejson
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes import generic
 
 
 class ModelMixIn(object):
@@ -58,3 +60,20 @@ class RequestStore(ModelMixIn, models.Model):
         return "(%s) '%s' at %s" % (self.req_status_code,
                                     self.url,
                                     self.created)
+
+
+class DbEntry(ModelMixIn, models.Model):
+    ACTION_CHOICES = (
+                ('create', 'Create'),
+                ('edit', 'Edit'),
+                ('delete', 'Delete'),
+            )
+    content_type = models.ForeignKey(ContentType, blank=True, null=True)
+    object_id = models.PositiveIntegerField(blank=True, null=True)
+    content_object = generic.GenericForeignKey('content_type', 'object_id')
+    presentation = models.CharField(max_length=255)
+    action = models.CharField(max_length=35, choices=ACTION_CHOICES)
+    created = models.DateTimeField(auto_now_add=True)
+    
+    def __unicode__(self):
+        return '%s %s: %s' % (self.created, self.action , self.presentation, ) 

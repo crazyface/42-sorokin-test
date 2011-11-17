@@ -5,6 +5,10 @@ from django.conf import settings
 from sorokin_test.core.templatetags.admin_urls import get_admin_url
 from sorokin_test.contact.models import Person
 from django.core.management import call_command
+from sorokin_test.core.models import DbEntry
+from sorokin_test.contact.models import Person
+from datetime import date
+from django.contrib.contenttypes.models import ContentType
 
 
 class TestModelBase:
@@ -28,7 +32,8 @@ class TestModelBase:
         """
         Equal define object count with curren object count in db
         """
-        self.assertEqual(self.objects_count, self.fixture_count)
+        if self.fixture_count:
+            self.assertEqual(self.objects_count, self.fixture_count)
 
     def test_fields(self):
         """
@@ -120,3 +125,36 @@ class TestCustomCommand(TestCase):
         test_str = '%s has %s objects\n' % (RequestStore,
                                            RequestStore.objects.count())
         self.assertIn(test_str, response)
+
+
+class TestDbEntry(TestModelBase, TestCase):
+    model = DbEntry
+    field_list = ['action', 'content_type', 'created', 'id', 'object_id', 'presentation']
+
+
+class TestSignalsHandler(TestCase):
+    
+    def test_handler(self):
+        data = {'first_name': 'Vasia',
+                'last_name': 'Pupin',
+                'birthday': date.today(),
+                'bio': 'molodec',
+                'email': 'vasia@mail.com',
+                'jabber': 'vasia@jabber.org',
+                'skype': 'vasia',
+                'other_contacts': 'tel: 123456'}
+        obj = Person.objects.create(**data)
+        obj.first_name = 'Alex'
+        obj.save()
+        ctype = ContentType.objects.get_for_model(Person)
+        Person.objects.filter(id=obj.id).delete()
+        entries = DbEntry.objects.filter(content_type=ctype,
+                                     object_id=obj.id)
+        self.assertEqual(entries.filter(action='create').count(),1)
+        self.assertEqual(entries.filter(action='edit').count(),1)
+        self.assertEqual(entries.filter(action='delete').count(),1)
+        
+    
+    
+    
+    
