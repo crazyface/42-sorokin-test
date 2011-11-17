@@ -21,10 +21,14 @@ html, body {
     width: 200px;
     height: 14px; }
 #perso_edit_form .errorlist {
+  width: auto;
   padding: 0; }
   #perso_edit_form .errorlist li {
     margin: 0;
     color: red; }
+
+.wait {
+  display: none; }
 
 #content {
   width: 800px;
@@ -53,6 +57,11 @@ html, body {
   #content .footer {
     clear: both;
     width: 100%; }
+  #content .requests {
+    width: 100%;
+    border: 1px solid black; }
+    #content .requests td {
+      border: 1px solid black; }
 
 .clear {
   clear: both; }
