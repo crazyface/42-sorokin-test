@@ -2,6 +2,7 @@ from models import RequestStore
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 from django.conf import settings
+from django.core.management import call_command
 
 
 class TestModelBase:
@@ -80,3 +81,24 @@ class TestSettingsContextProc(TestCase):
                              self.settings.MEDIA_URL)
         self.assertEqual(self.response.context['settings'].SECRET_KEY,
                              self.settings.SECRET_KEY)
+
+
+class TestCustomCommand(TestCase):
+    class Output():
+        def __init__(self):
+            self.text = ''
+        def write(self, string):
+            self.text = self.text + string
+        def writelines(self,lines):
+            for line in lines: self.write(line)
+
+    def test_command(self):
+        import sys
+        savestreams =sys.stdin, sys.stdout
+        sys.stdout = self.Output()
+        call_command('model_list')
+        response = sys.stdout.text
+        sys.stdin, sys.stdout = savestreams
+        test_str = '%s has %s objects\n' % (RequestStore,
+                                           RequestStore.objects.count())
+        self.assertIn(test_str, response)
