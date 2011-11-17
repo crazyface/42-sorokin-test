@@ -135,6 +135,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+    'sorokin_test.core',
     'sorokin_test.contact'
     # Uncomment the next line to enable the admin:
     # Uncomment the next line to enable admin documentation:

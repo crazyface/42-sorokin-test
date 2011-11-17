@@ -1,17 +1,21 @@
-from sorokin_test.contact.models import RequestStore
+from models import RequestStore
 import re
 
 
 class RequestMiddleWare(object):
+    object = None
+
+    def process_request(self, request):
+        path = request.path
+        self.object = RequestStore.objects.create(url=request.path,
+                                                  req_get=request.GET,
+                                                  req_post=request.POST,
+                                                  req_cookies=request.COOKIES,
+                                                  req_session=request.session,
+                                                  req_meta=request.META)
+
     def process_response(self, request, response):
-        path = url=request.path
-        if not re.match("^(/media|/admin|.*\.ico).*$", path):
-            RequestStore.objects.create(
-                               url=request.path,
-                               req_get=request.GET,
-                               req_post=request.POST,
-                               req_cookies=request.COOKIES,
-                               req_session=request.session,
-                               req_meta=request.META,
-                               res_status_code=response.status_code)
+        if self.object:
+            self.object.req_status_code = response.status_code
+            self.object.save()
         return response
