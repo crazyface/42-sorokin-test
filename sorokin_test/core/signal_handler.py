@@ -13,7 +13,6 @@ def post_save_handler(sender, instance, created, **kwargs):
                                    presentation=str(instance))
         except DatabaseError:
             pass
-#    print sen./der, instance, created, kwargs
 
 def post_delete_handler(sender, instance, **kwargs):
     if not isinstance(instance, DbEntry) and hasattr(instance, 'id'):
