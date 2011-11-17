@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 from sorokin_test.core.templatetags.admin_urls import get_admin_url
 from sorokin_test.contact.models import Person
+from django.core.management import call_command
 
 
 class TestModelBase:
@@ -100,3 +101,22 @@ class TestCustomTag(TestCase):
         obj = Person.objects.all()[0]
         self.assertEqual(get_admin_url(obj), '/admin/contact/person/1/')
         
+class TestCustomCommand(TestCase):
+    class Output():
+        def __init__(self):
+            self.text = ''
+        def write(self, string):
+            self.text = self.text + string
+        def writelines(self,lines):
+            for line in lines: self.write(line)
+
+    def test_command(self):
+        import sys
+        savestreams =sys.stdin, sys.stdout
+        sys.stdout = self.Output()
+        call_command('model_list')
+        response = sys.stdout.text
+        sys.stdin, sys.stdout = savestreams
+        test_str = '%s has %s objects\n' % (RequestStore,
+                                           RequestStore.objects.count())
+        self.assertIn(test_str, response)

@@ -11,4 +11,5 @@ def get_admin_url(obj):
         return reverse('admin:' + obj._meta.db_table + '_change',
                        args=(obj.id,))
     except:
-        return obj
+        return obj 
+    
