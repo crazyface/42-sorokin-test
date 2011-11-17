@@ -16,6 +16,8 @@ class PersonEditView(UpdateView):
     form_class = PersonForm
 
     def get_object(self, **kwargs):
+#        print dir(Person)
+        print Person._meta.db_table
         return Person.objects.all()[0]
     
     def post(self, request, *args, **kwargs):

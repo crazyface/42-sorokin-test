@@ -55,6 +55,6 @@ class RequestStore(ModelMixIn, models.Model):
         return super(RequestStore, self).save(*args, **kwargs)
 
     def __unicode__(self):
-        return "(%s) '%s' at %s" % (self.res_status_code,
+        return "(%s) '%s' at %s" % (self.req_status_code,
                                     self.url,
                                     self.created)
