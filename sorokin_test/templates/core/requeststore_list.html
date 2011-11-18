@@ -4,6 +4,7 @@
 {% block content %}
 	<table class='requests'>
 		<tr>
+			<td><a href='?{{ order.links.priority }}'> Priority</a></td>
 			<td>Status</td>
 			<td>Url</td>
 			<td>Date</td>
@@ -14,6 +15,7 @@
 		</tr>
 		{% for req in object_list %}
 			<tr>
+				<td>{{ req.priority }}</td>
 				<td>{{ req.req_status_code }}</td>
 				<td>{{ req.url }} </td>
 				<td>{{ req.created }}</td>

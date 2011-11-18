@@ -1,6 +1,4 @@
-from django.test import TestCase
 from django.db import models
-from django.utils import simplejson
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 
@@ -51,12 +49,6 @@ class RequestStore(ModelMixIn, models.Model):
     class Meta:
         ordering = ['-created']
 
-    def save(self, *args, **kwargs):
-        self.req_get = dict(self.req_get)
-        self.req_post = dict(self.req_post)
-        self.req_session = dict(self.req_session.items())
-        return super(RequestStore, self).save(*args, **kwargs)
-
     def __unicode__(self):
         return "(%s) '%s' at %s" % (self.req_status_code,
                                     self.url,
@@ -75,6 +67,6 @@ class DbEntry(ModelMixIn, models.Model):
     presentation = models.CharField(max_length=255)
     action = models.CharField(max_length=35, choices=ACTION_CHOICES)
     created = models.DateTimeField(auto_now_add=True)
-    
+
     def __unicode__(self):
-        return '%s %s: %s' % (self.created, self.action , self.presentation, ) 
+        return '%s %s: %s' % (self.created, self.action, self.presentation)

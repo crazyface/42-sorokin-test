@@ -6,9 +6,10 @@ from sorokin_test.core.templatetags.admin_urls import get_admin_url
 from sorokin_test.contact.models import Person
 from django.core.management import call_command
 from sorokin_test.core.models import DbEntry
-from sorokin_test.contact.models import Person
 from datetime import date
 from django.contrib.contenttypes.models import ContentType
+import sys
+from sorokin_test.core.utils import order_by
 
 
 class TestModelBase:
@@ -50,27 +51,28 @@ class TestModelRequestStore(TestModelBase, TestCase):
 
 
 class TestRequestView(TestCase):
-    url1 = reverse('login')
+    fixtures = ['request.json']
+    login_url = reverse('login')
     fake_url = '/asdas'
-    url2 = reverse('requests')
+    req_url = reverse('requests')
 
     def test_middleware(self):
-        response = self.client.get(self.url1)
-        obj = RequestStore.objects.filter(url=self.url1,
-                                          req_status_code=200) 
+        self.client.get(self.login_url)
+        obj = RequestStore.objects.filter(url=self.login_url,
+                                          req_status_code=200)
         self.assertEqual(obj.count(), 1)
-        response = self.client.get(self.fake_url)
+        self.client.get(self.fake_url)
         obj = RequestStore.objects.filter(url=self.fake_url,
-                                          req_status_code=404) 
+                                          req_status_code=404)
         self.assertEqual(obj.count(), 1)
-    
+
     def test_context(self):
         # visit valid url
-        self.response = self.client.get(self.url1)
+        self.response = self.client.get(self.login_url)
         self.assertEqual(self.response.status_code, 200)
 
         #check that request is saved
-        self.response = self.client.get(self.url2)
+        self.response = self.client.get(self.req_url)
         self.assertContains(self.response, "/login/")
         self.assertContains(self.response, "200")
 
@@ -79,9 +81,35 @@ class TestRequestView(TestCase):
         self.assertEqual(self.response.status_code, 404)
 
         #check that request is saved
-        self.response = self.client.get(self.url2)
+        self.response = self.client.get(self.req_url)
         self.assertContains(self.response, self.fake_url)
         self.assertContains(self.response, "404")
+
+    def test_context_with_ordering(self):
+        response = self.client.get(self.req_url + "?ordering=priority")
+        prior_qs1 = response.context['object_list']
+        prior_qs2 = RequestStore.objects.all().order_by('priority')[:10]
+        self.assertEqual(list(prior_qs1), list(prior_qs2))
+
+        response = self.client.get(self.req_url + "?ordering=-priority")
+        reverse_qs1 = response.context['object_list']
+        reverse_qs2 = RequestStore.objects.all().order_by('-priority')[:10]
+        self.assertEqual(list(reverse_qs1), list(reverse_qs2))
+
+        response = self.client.get(self.req_url)
+        qs1 = response.context['object_list']
+        qs2 = RequestStore.objects.all()[:10]
+        self.assertEqual(list(qs1), list(qs2))
+
+    def test_layout(self):
+        response = self.client.get(self.req_url)
+        self.assertContains(response, 'ordering=-priority')
+
+        response = self.client.get(self.req_url + '?ordering=priority')
+        self.assertContains(response, 'ordering=-priority')
+
+        response = self.client.get(self.req_url + '?ordering=-priority')
+        self.assertContains(response, '?ordering=priority')
 
 
 class TestSettingsContextProc(TestCase):
@@ -101,23 +129,26 @@ class TestSettingsContextProc(TestCase):
 
 
 class TestCustomTag(TestCase):
-    
+
     def test_tag(self):
         obj = Person.objects.all()[0]
         self.assertEqual(get_admin_url(obj), '/admin/contact/person/1/')
-        
+
+
 class TestCustomCommand(TestCase):
     class Output():
         def __init__(self):
             self.text = ''
+
         def write(self, string):
             self.text = self.text + string
-        def writelines(self,lines):
-            for line in lines: self.write(line)
+
+        def writelines(self, lines):
+            for line in lines:
+                self.write(line)
 
     def test_command(self):
-        import sys
-        savestreams =sys.stdin, sys.stdout
+        savestreams = sys.stdin, sys.stdout
         sys.stdout = self.Output()
         call_command('model_list')
         response = sys.stdout.text
@@ -129,11 +160,12 @@ class TestCustomCommand(TestCase):
 
 class TestDbEntry(TestModelBase, TestCase):
     model = DbEntry
-    field_list = ['action', 'content_type', 'created', 'id', 'object_id', 'presentation']
+    field_list = ['action', 'content_type', 'created', 'id',
+                  'object_id', 'presentation']
 
 
 class TestSignalsHandler(TestCase):
-    
+
     def test_handler(self):
         data = {'first_name': 'Vasia',
                 'last_name': 'Pupin',
@@ -150,11 +182,35 @@ class TestSignalsHandler(TestCase):
         Person.objects.filter(id=obj.id).delete()
         entries = DbEntry.objects.filter(content_type=ctype,
                                      object_id=obj.id)
-        self.assertEqual(entries.filter(action='create').count(),1)
-        self.assertEqual(entries.filter(action='edit').count(),1)
-        self.assertEqual(entries.filter(action='delete').count(),1)
-        
-    
-    
-    
-    
+        self.assertEqual(entries.filter(action='create').count(), 1)
+        self.assertEqual(entries.filter(action='edit').count(), 1)
+        self.assertEqual(entries.filter(action='delete').count(), 1)
+
+
+class TestOrderBy(TestCase):
+
+    def test_invert(self):
+        order = order_by()
+        self.assertEqual(order.invert('priority'), '-priority')
+        self.assertEqual(order.invert('-created'), 'created')
+        self.assertNotEqual(order.invert('url'), 'url')
+
+    def test_querystring(self):
+        order = order_by(allowed=['priority', 'date'])
+        self.assertEqual(order.for_link('priority'),
+                         'ordering=-priority')
+        self.assertEqual(order.for_link('date'),
+                         'ordering=-date')
+
+        order = order_by(ordering=['-date'], allowed=['priority', 'date'])
+        self.assertEqual(order.for_link('priority'),
+                         'ordering=-priority&ordering=-date')
+        self.assertEqual(order.for_link('date'),
+                         'ordering=date')
+
+        order = order_by(ordering=['-priority', 'date'],
+                         allowed=['priority', 'date'])
+        self.assertEqual(order.for_link('priority'),
+                         'ordering=priority&ordering=date')
+        self.assertEqual(order.for_link('date'),
+                         'ordering=-date&ordering=-priority')
