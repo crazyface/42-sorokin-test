@@ -111,7 +111,7 @@ class TestRequestView(TestCase):
         self.assertContains(response, 'ordering=-priority')
 
         response = self.client.get(self.req_url + '?ordering=-priority')
-        self.assertContains(response, '?ordering=priority')
+        self.assertContains(response, 'ordering=priority')
 
     def build_post_request(self, queryset, formset_class):
         formset = formset_class(queryset=queryset)
@@ -245,19 +245,19 @@ class TestOrderBy(TestCase):
     def test_querystring(self):
         order = order_by(allowed=['priority', 'date'])
         self.assertEqual(order.for_link('priority'),
-                         'ordering=-priority')
+                         '?ordering=-priority')
         self.assertEqual(order.for_link('date'),
-                         'ordering=-date')
+                         '?ordering=-date')
 
         order = order_by(ordering=['-date'], allowed=['priority', 'date'])
         self.assertEqual(order.for_link('priority'),
-                         'ordering=-priority&ordering=-date')
+                         '?ordering=-priority&ordering=-date')
         self.assertEqual(order.for_link('date'),
-                         'ordering=date')
+                         '?ordering=date')
 
         order = order_by(ordering=['-priority', 'date'],
                          allowed=['priority', 'date'])
         self.assertEqual(order.for_link('priority'),
-                         'ordering=priority&ordering=date')
+                         '?ordering=priority&ordering=date')
         self.assertEqual(order.for_link('date'),
-                         'ordering=-date&ordering=-priority')
+                         '?ordering=-date&ordering=-priority')
