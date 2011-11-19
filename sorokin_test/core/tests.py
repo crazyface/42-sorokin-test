@@ -10,6 +10,7 @@ from datetime import date
 from django.contrib.contenttypes.models import ContentType
 import sys
 from sorokin_test.core.utils import order_by
+from sorokin_test.core.forms import RequestStoreEditList
 
 
 class TestModelBase:
@@ -110,6 +111,29 @@ class TestRequestView(TestCase):
 
         response = self.client.get(self.req_url + '?ordering=-priority')
         self.assertContains(response, '?ordering=priority')
+
+    def build_post_request(self, queryset, formset_class):
+        formset = formset_class(queryset=queryset)
+        fields = {'form-TOTAL_FORMS': formset.total_form_count(),
+                  'form-INITIAL_FORMS': formset.initial_form_count(),
+                  'form-MAX_NUM_FORMS': ''}
+        for form in formset:
+            for field in form:
+                fields[field.html_name] = field.value()
+        return fields
+
+    def test_formset(self):
+        response = self.client.get(self.req_url)
+        queryset = response.context['object_list']
+        data = self.build_post_request(queryset, RequestStoreEditList)
+        data['form-0-priority'] = 5
+        obj_id = data['form-0-id']
+        obj = RequestStore.objects.get(id=obj_id)
+        before = obj.priority
+        self.client.post(self.req_url, data=data)
+        obj = RequestStore.objects.get(id=obj_id)
+        after = obj.priority
+        self.assertNotEqual(before, after)
 
 
 class TestSettingsContextProc(TestCase):

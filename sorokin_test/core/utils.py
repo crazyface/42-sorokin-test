@@ -8,7 +8,7 @@ class order_by(object):
         for order in allowed:
             val = order.strip('-')
             self.links[val] = self.for_link(val)
-    
+
     def invert(self, value):
         if '-' in value:
             return value.strip('-')
@@ -27,3 +27,6 @@ class order_by(object):
                 val = order
         query = ['ordering=' + self.invert(val)] + query
         return '&'.join(query)
+
+    def get_current_order(self):
+        return '&'.join(['ordering=' + x for x in self.ordering])

@@ -2,6 +2,9 @@
 
 
 {% block content %}
+	<form action="?{{ order.get_current_order }}" method='POST'>
+		{% csrf_token %}
+		{{ formset.management_form }}
 	<table class='requests'>
 		<tr>
 			<td><a href='?{{ order.links.priority }}'> Priority</a></td>
@@ -13,17 +16,20 @@
 			<td>Session</td>
 			<td>Cookies</td>
 		</tr>
-		{% for req in object_list %}
+		{% for form in formset %}
+			{{ form.id }}
 			<tr>
-				<td>{{ req.priority }}</td>
-				<td>{{ req.req_status_code }}</td>
-				<td>{{ req.url }} </td>
-				<td>{{ req.created }}</td>
-				<td>{{ req.req_get }}</td>
-				<td>{{ req.req_post }}</td>
-				<td>{{ req.req_session }}</td>
-				<td>{{ req.req_cookies }}</td>
+				<td>{{ form.errors.priority }}{{ form.priority }}</td>
+				<td>{{ form.instance.req_status_code }}</td>
+				<td>{{ form.instance.url }} </td>
+				<td>{{ form.instance.created }}</td>
+				<td>{{ form.instance.req_get }}</td>
+				<td>{{ form.instance.req_post }}</td>
+				<td>{{ form.instance.req_session }}</td>
+				<td>{{ form.instance.req_cookies }}</td>
 			</tr>
 		{% endfor %}
 	</table>
+	<input type="submit" value='Save Changes'/>
+	</form>
 {% endblock %}

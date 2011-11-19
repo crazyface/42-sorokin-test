@@ -36,6 +36,11 @@ class ModelMixIn(object):
 
 
 class RequestStore(ModelMixIn, models.Model):
+    PRIORITY_CHOICES = [[1, 1],
+                        [2, 2],
+                        [3, 3],
+                        [4, 4],
+                        [5, 5]]
     created = models.DateTimeField(auto_now_add=True)
     url = models.TextField()
     req_get = models.TextField(blank=True, null=True)
@@ -44,7 +49,7 @@ class RequestStore(ModelMixIn, models.Model):
     req_session = models.TextField(blank=True, null=True)
     req_meta = models.TextField()
     req_status_code = models.PositiveIntegerField(blank=True, null=True)
-    priority = models.IntegerField(default=1)
+    priority = models.IntegerField(default=1, choices=PRIORITY_CHOICES)
 
     class Meta:
         ordering = ['-created']
