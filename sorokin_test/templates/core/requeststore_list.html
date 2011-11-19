@@ -1,27 +1,50 @@
 {% extends 'base.html' %}
 
+{% block extrahead %}
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/edit_request.js"></script>
+{% endblock %}
 
 {% block content %}
+	<div class='hidden'>
+		<img id='ajax_spiner' src='{{ STATIC_URL }}images/ajax-loader.gif'>
+		<img id='ajax_success' src='{{ STATIC_URL }}images/success.png'>
+		<img id='ajax_error' src='{{ STATIC_URL }}images/error.png'>
+	</div>
+	<form id='req_formset' action="{{ order.get_current_order }}" method='POST'>
+		{% csrf_token %}
+		{{ formset.management_form }}
+	<input type="submit" value='Save Changes'/>
 	<table class='requests'>
 		<tr>
+			<td></td>
+			<td>
+				<a href='{{ order.links.priority }}'> Priority</a>
+				{% if order.remove.priority.need %}
+					<a href='{{ order.remove.priority.query }}'>X</a>
+				{% endif %}
+			</td>
 			<td>Status</td>
 			<td>Url</td>
 			<td>Date</td>
 			<td>Get</td>
 			<td>Post</td>
-			<td>Session</td>
-			<td>Cookies</td>
 		</tr>
-		{% for req in object_list %}
-			<tr>
-				<td>{{ req.req_status_code }}</td>
-				<td>{{ req.url }} </td>
-				<td>{{ req.created }}</td>
-				<td>{{ req.req_get }}</td>
-				<td>{{ req.req_post }}</td>
-				<td>{{ req.req_session }}</td>
-				<td>{{ req.req_cookies }}</td>
+		{% for form in formset %}
+			<tr class='request_form'>
+				{{ form.id }}
+				<td class='ajax_status'></td>
+				<td>
+					{{ form.errors.priority }}{{ form.priority }}
+				</td>
+				<td>{{ form.instance.req_status_code }}</td>
+				<td>{{ form.instance.url }} </td>
+				<td>{{ form.instance.created }}</td>
+				<td>{{ form.instance.req_get }}</td>
+				<td>{{ form.instance.req_post }}</td>
 			</tr>
 		{% endfor %}
 	</table>
+	<input type="submit" value='Save Changes'/>
+	</form>
 {% endblock %}

@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.urlresolvers import reverse
-from sorokin_test.core.models import ModelMixIn 
+from sorokin_test.core.models import ModelMixIn
 
 
 class Person(ModelMixIn, models.Model):

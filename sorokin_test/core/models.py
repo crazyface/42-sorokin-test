@@ -1,6 +1,4 @@
-from django.test import TestCase
 from django.db import models
-from django.utils import simplejson
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 
@@ -38,6 +36,11 @@ class ModelMixIn(object):
 
 
 class RequestStore(ModelMixIn, models.Model):
+    PRIORITY_CHOICES = [[1, 1],
+                        [2, 2],
+                        [3, 3],
+                        [4, 4],
+                        [5, 5]]
     created = models.DateTimeField(auto_now_add=True)
     url = models.TextField()
     req_get = models.TextField(blank=True, null=True)
@@ -46,16 +49,10 @@ class RequestStore(ModelMixIn, models.Model):
     req_session = models.TextField(blank=True, null=True)
     req_meta = models.TextField()
     req_status_code = models.PositiveIntegerField(blank=True, null=True)
-    priority = models.IntegerField(default=1)
+    priority = models.IntegerField(default=1, choices=PRIORITY_CHOICES)
 
     class Meta:
         ordering = ['-created']
-
-    def save(self, *args, **kwargs):
-        self.req_get = dict(self.req_get)
-        self.req_post = dict(self.req_post)
-        self.req_session = dict(self.req_session.items())
-        return super(RequestStore, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return "(%s) '%s' at %s" % (self.req_status_code,
@@ -75,6 +72,6 @@ class DbEntry(ModelMixIn, models.Model):
     presentation = models.CharField(max_length=255)
     action = models.CharField(max_length=35, choices=ACTION_CHOICES)
     created = models.DateTimeField(auto_now_add=True)
-    
+
     def __unicode__(self):
-        return '%s %s: %s' % (self.created, self.action , self.presentation, ) 
+        return '%s %s: %s' % (self.created, self.action, self.presentation)

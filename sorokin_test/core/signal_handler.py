@@ -2,6 +2,7 @@ from django.db.models.signals import post_delete, post_save
 from models import DbEntry
 from django.db.utils import DatabaseError
 
+
 def post_save_handler(sender, instance, created, **kwargs):
     if not isinstance(instance, DbEntry) and hasattr(instance, 'id'):
         action = 'edit'
@@ -13,6 +14,7 @@ def post_save_handler(sender, instance, created, **kwargs):
                                    presentation=str(instance))
         except DatabaseError:
             pass
+
 
 def post_delete_handler(sender, instance, **kwargs):
     if not isinstance(instance, DbEntry) and hasattr(instance, 'id'):
