@@ -11,6 +11,7 @@ from django.contrib.contenttypes.models import ContentType
 import sys
 from sorokin_test.core.utils import order_by
 from sorokin_test.core.forms import RequestStoreEditList
+from django.utils import simplejson
 
 
 class TestModelBase:
@@ -134,6 +135,28 @@ class TestRequestView(TestCase):
         obj = RequestStore.objects.get(id=obj_id)
         after = obj.priority
         self.assertNotEqual(before, after)
+
+    def test_ajax(self):
+        obj = RequestStore.objects.all().order_by('?')[0]
+        obj.priority = 1
+        obj.save()
+        response = self.client.post(self.req_url,
+                                   {'id': obj.id, 'priority': 5},
+                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(response.status_code, 200)
+        json_response = simplejson.loads(response.content)
+        self.assertEqual(json_response['status'], 'success')
+
+        #repick object
+        obj = RequestStore.objects.get(id=obj.id)
+        self.assertEqual(obj.priority, 5)
+
+        response = self.client.post(self.req_url,
+                                   {'priority': 5},
+                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(response.status_code, 200)
+        json_response = simplejson.loads(response.content)
+        self.assertEqual(json_response['status'], 'error')
 
 
 class TestSettingsContextProc(TestCase):

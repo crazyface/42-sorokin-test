@@ -1,32 +1,47 @@
 {% extends 'base.html' %}
 
+{% block extrahead %}
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/edit_request.js"></script>
+{% endblock %}
 
 {% block content %}
-	<form action="?{{ order.get_current_order }}" method='POST'>
+	<div class='hidden'>
+		<img id='ajax_spiner' src='{{ STATIC_URL }}images/ajax-loader.gif'>
+		<img id='ajax_success' src='{{ STATIC_URL }}images/success.png'>
+		<img id='ajax_error' src='{{ STATIC_URL }}images/error.png'>
+	</div>
+	<form id='req_formset' action="{{ order.get_current_order }}" method='POST'>
 		{% csrf_token %}
 		{{ formset.management_form }}
+	<input type="submit" value='Save Changes'/>
 	<table class='requests'>
 		<tr>
-			<td><a href='?{{ order.links.priority }}'> Priority</a></td>
+			<td></td>
+			<td>
+				<a href='{{ order.links.priority }}'> Priority</a>
+				{% if order.remove.priority.need %}
+					<a href='{{ order.remove.priority.query }}'>X</a>
+				{% endif %}
+			</td>
 			<td>Status</td>
 			<td>Url</td>
 			<td>Date</td>
 			<td>Get</td>
 			<td>Post</td>
-			<td>Session</td>
-			<td>Cookies</td>
 		</tr>
 		{% for form in formset %}
-			{{ form.id }}
-			<tr>
-				<td>{{ form.errors.priority }}{{ form.priority }}</td>
+			<tr class='request_form'>
+				{{ form.id }}
+				<td class='ajax_status'></td>
+				<td>
+					{{ form.errors.priority }}{{ form.priority }}
+				</td>
 				<td>{{ form.instance.req_status_code }}</td>
 				<td>{{ form.instance.url }} </td>
 				<td>{{ form.instance.created }}</td>
 				<td>{{ form.instance.req_get }}</td>
 				<td>{{ form.instance.req_post }}</td>
-				<td>{{ form.instance.req_session }}</td>
-				<td>{{ form.instance.req_cookies }}</td>
 			</tr>
 		{% endfor %}
 	</table>
